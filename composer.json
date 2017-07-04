@@ -1,0 +1,24 @@
+{
+    "name": "selfreliance/apitokens",
+    "type": "library",
+    "version": "1.0.0",
+    "description": "Admin for manager api tokens",
+    "keywords": ["admin", "laravel"],
+    "homepage": "https://github.com/selfrelianceme/apitokens",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vlad Kit",
+            "email": "vladwebkit@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8"
+    },
+    "autoload": {
+        "psr-4": {"Selfreliance\\Adminamazing\\": "src/"}
+    }
+}
