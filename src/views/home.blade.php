@@ -21,24 +21,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($ApiTokens as $user)
+                                @foreach($ApiTokens as $token)
                                     <tr>
-                                        <td>{{$user->id}}</td>
-                                        <td>{{$user->name_token}}</td>
+                                        <td>{{$token->id}}</td>
+                                        <td>{{$token->name_token}}</td>
                                         <td>
-                                        	@if($user->scope_view)
-	                                        	@foreach($user->scope_view as $row)
+                                        	@if($token->scope_view)
+	                                        	@foreach($token->scope_view as $row)
 	                                        		<span class="label label-info">{{$row}}</span>
 	                                        	@endforeach
                                         	@endif
                                         </td>
-                                        <td>{{$user->created_at}}</td>  
-                                        <td>{{$user->ip_address}}</td>      
+                                        <td>{{$token->created_at}}</td>  
+                                        <td>{{$token->ip_address}}</td>      
                                         <td class="text-nowrap">                                            
-                                            <form action="{{ route('AdminUsersDeleted', $user->id) }}" method="POST">
+                                            <form action="{{ route('AdminApiTokensDeleted', $token->id) }}" method="POST">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
-                                                 <a href="{{ route('AdminUsersEdit', $user->id) }}" data-toggle="tooltip" data-original-title="Редактировать"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
+                                                 <a href="{{ route('AdminApiTokensEdit', $token->id) }}" data-toggle="tooltip" data-original-title="Редактировать"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
                                                 <button class="btn btn-link" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-close text-danger"></i></button>
                                             </form>
                                         </td>
