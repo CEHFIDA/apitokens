@@ -1,6 +1,6 @@
 @extends('adminamazing::teamplate')
 
-@section('pageTitle', 'Редактирование/Просмотр токена')
+@section('pageTitle', 'Редактирование токена')
 @section('content')
     <div class="row">
         <!-- Column -->
@@ -14,23 +14,23 @@
                             </div>
                         @endforeach
                     @endif
-                    <form action="{{route('AdminApiTokenUpdate', $tokenInfo->id)}}" method="POST" class="form-horizontal form-material">
+                    <form action="{{route('AdminApiTokensUpdate', $token->id)}}" method="POST" class="form-horizontal">
                         <div class="form-group">
                             <label for="name_token" class="col-md-12">Имя</label>
                             <div class="col-md-12">
-                                <input type="text" name="name_token" id="name_token" value="{{$tokenInfo->name_token}}" placeholder="" class="form-control form-control-line">
+                                <input type="text" name="name_token" id="name_token" value="{{$token->name_token}}" placeholder="" class="form-control form-control-line">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="ip_address" class="col-md-12">IP доступа</label>
                             <div class="col-md-12">
-                                <input type="text" name="ip_address" id="ip_address" value="{{$tokenInfo->ip_address}}" placeholder="" class="form-control form-control-line">
+                                <input type="text" name="ip_address" id="ip_address" value="{{$token->ip_address}}" placeholder="" class="form-control form-control-line">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="token" class="col-md-12">Токен</label>
                             <div class="col-md-12">
-                                <input type="text" name="token" id="token" value="{{$tokenInfo->token}}" placeholder="" class="form-control form-control-line">
+                                <input type="text" name="token" id="token" value="{{$token->token}}" placeholder="" class="form-control form-control-line">
                             </div>
                         </div>
 
@@ -39,17 +39,18 @@
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="checkbox checkbox-inline checkbox-primary">
+                                        <div class="checkbox checkbox-inline checkbox-success">
                                             <input id="checkbox1" type="checkbox" checked disabled>
                                             <label for="checkbox1">
                                                 Информация о аккаунте
                                             </label>
                                         </div>
                                     </div>
+                                    @if(count($token->scope) > 0)
                                     <div class="col-md-6">
-                                        <div class="checkbox checkbox-inline checkbox-primary">
+                                        <div class="checkbox checkbox-inline checkbox-success">
                                             <input id="checkbox2" type="checkbox" 
-                                                @if(count($tokenInfo->scope_view)> 0 && in_array("create_address", $tokenInfo->scope_view))
+                                                @if(in_array("create_address", $token->scope))
                                                     checked
                                                 @endif 
                                                 name="scope[]" 
@@ -60,9 +61,9 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="checkbox checkbox-inline checkbox-primary">
+                                        <div class="checkbox checkbox-inline checkbox-success">
                                             <input id="checkbox3" type="checkbox"
-                                                @if(count($tokenInfo->scope_view)> 0 && in_array("history_transaction", $tokenInfo->scope_view))
+                                                @if(in_array("history_transaction", $token->scope))
                                                     checked
                                                 @endif
                                                 name="scope[]" 
@@ -73,9 +74,9 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="checkbox checkbox-inline checkbox-primary">
+                                        <div class="checkbox checkbox-inline checkbox-success">
                                             <input id="checkbox4" type="checkbox" 
-                                                @if(count($tokenInfo->scope_view)> 0 && in_array("sending_funds", $tokenInfo->scope_view))
+                                                @if(in_array("sending_funds", $token->scope))
                                                     checked
                                                 @endif
                                                 name="scope[]" value="sending_funds">
@@ -84,6 +85,7 @@
                                             </label>
                                         </div>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -93,10 +95,9 @@
 
                         <div class="form-group">
                             <div class="col-sm-12">
-                                <button class="btn btn-success">Обновить профиль</button>
+                                <button class="btn btn-success">Обновить токен</button>
                             </div>
                         </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -104,26 +105,69 @@
             <div class="card">
                 <div class="card-block">
                     <div class="form-group">
-                        <label for="new_password" class="col-md-12">URL уведомлений ({{$tokenInfo->notiffication_status->method }})</label>
+                        <label for="notify" class="col-md-12">URL уведомлений</label>
                         <div class="col-md-12">
-                            <input type="text" disabled id="new_password" value="{{$tokenInfo->notiffication_status->url }}" class="form-control form-control-line">
+                            <input type="text" name="notiffication_status_url" id="notify" value="{{$token->notiffication_status->url }}" class="form-control form-control-line">
+                            <select class="custom-select col-12" name="notiffication_status_method">
+                                <option 
+                                value="GET"
+                                @if($token->notiffication_status->method == "GET")
+                                    selected
+                                @endif
+                                >GET</option>
+                                <option 
+                                value="POST"
+                                @if($token->notiffication_status->method == "POST")
+                                    selected
+                                @endif
+                                >POST</option>
+                            </select>                            
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="new_password" class="col-md-12">URL ошибка при оплате ({{$tokenInfo->notiffication_fail->method }})</label>
+                        <label for="before_payment" class="col-md-12">URL ошибка при оплате</label>
                         <div class="col-md-12">
-                            <input type="text" disabled id="new_password" value="{{$tokenInfo->notiffication_fail->url }}" class="form-control form-control-line">
+                            <input type="text" name="notiffication_fail_url" id="before_payment" value="{{$token->notiffication_fail->url }}" class="form-control form-control-line">
+                            <select class="custom-select col-12" name="notiffication_fail_method">
+                                <option 
+                                value="GET"
+                                @if($token->notiffication_fail->method == "GET")
+                                    selected
+                                @endif
+                                >GET</option>
+                                <option 
+                                value="POST"
+                                @if($token->notiffication_fail->method == "POST")
+                                    selected
+                                @endif
+                                >POST</option>
+                            </select>                            
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="new_password" class="col-md-12">URL возрата после оплаты ({{$tokenInfo->notiffication_success->method }})</label>
+                        <label for="after_payment" class="col-md-12">URL возрата после оплаты</label>
                         <div class="col-md-12">
-                            <input type="text" disabled id="new_password" value="{{$tokenInfo->notiffication_success->url }}" class="form-control form-control-line">
+                            <input type="text" name="notiffication_success_url" id="after_payment" value="{{$token->notiffication_success->url }}" class="form-control form-control-line">
+                            <select class="custom-select col-12" name="notiffication_success_method">
+                                <option 
+                                value="GET"
+                                @if($token->notiffication_success->method == "GET")
+                                    selected
+                                @endif
+                                >GET</option>
+                                <option 
+                                value="POST"
+                                @if($token->notiffication_success->method == "POST")
+                                    selected
+                                @endif
+                                >POST</option>
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        </form>
         <!-- Column -->
     </div>
 @endsection

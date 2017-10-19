@@ -1,69 +1,106 @@
 <?php
 
-namespace Selfreliance\Apitokens;
+namespace Selfreliance\apitokens;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Api_Token;
+use Selfreliance\Apitokens\Models\Api_Token;
 
 class ApiTokensController extends Controller
 {
-
-    public function index()
-    {
-    	$ApiTokens = Api_Token::orderBy('id', 'desc')->paginate(10);
-    	$ApiTokens->each(function($row){
-			$temp = json_decode($row->scope);
-			if(count($temp) > 0){
-				$row->scope_view = $temp;
-			}
+	public function index()
+	{
+		$tokens = Api_Token::orderBy('id', 'desc')->paginate(10);
+    	$tokens->each(function($row)
+    	{
+			if(count($row->scope) > 0) $row->scope = json_decode($row->scope);
+			else $row->scope = [""];
     	});
-        return view('apitoken::home')->with(["ApiTokens"=>$ApiTokens]);
-    }
+		return view('apitokens::home')->with(['tokens' => $tokens]);
+	}
 
-    public function destroy($id){
-        $ModelToken = Api_Token::findOrFail($id);
-        $ModelToken->delete();
-        return redirect()->route('AdminApiTokens')->with('status', 'Токен и доступ к api удален!');
-    }
+	public function action(Request $request, $id = null)
+	{
+		$method = $request->method();
+		if($method == 'GET')
+		{// Get token
+			$Token = Api_Token::findOrFail($id);
 
-    public function edit($id){
-        $tokenInfo = Api_Token::findOrFail($id);
-        $temp = json_decode($tokenInfo->scope);
-        if(count($temp) > 0){
-            $tokenInfo->scope_view = $temp;
-        }
-        
-        if($tokenInfo->notiffication_status){
-            $tokenInfo->notiffication_status = json_decode($tokenInfo->notiffication_status);
-        }
-        if($tokenInfo->notiffication_fail){
-            $tokenInfo->notiffication_fail = json_decode($tokenInfo->notiffication_fail);
-        }
-        if($tokenInfo->notiffication_success){
-            $tokenInfo->notiffication_success = json_decode($tokenInfo->notiffication_success);
-        }
-        // dd($tokenInfo);
-        return view('apitoken::edit')->with(["tokenInfo"=>$tokenInfo]);
-    }
+			$Token->scope = json_decode($Token->scope);
+			if(!$Token->scope) $Token->scope = [""];
 
-    public function update($id, Request $request){
-        $this->validate($request, [
-            'name_token' => 'required|min:2',
-            'token'      => 'required|min:44',
-            'ip_address' => 'required|ip',
-            'scope'      => 'array|in:create_address,history_transaction,sending_funds',
-        ]);
-        $scope = json_encode($request->input('scope'));
+			if($Token->notiffication_status)
+			{
+				$Token->notiffication_status = json_decode($Token->notiffication_status);
+			}
+			if($Token->notiffication_fail) 
+			{
+				$Token->notiffication_fail = json_decode($Token->notiffication_fail);
+			}
+			if($Token->notiffication_success) 
+			{
+				$Token->notiffication_success = json_decode($Token->notiffication_success);
+			}
 
-        $ModelToken             = Api_Token::where('id',$id)->first();
-        $ModelToken->token      = $request->input('token');
-        $ModelToken->scope      = $scope;
-        $ModelToken->name_token = $request->input('name_token');
-        $ModelToken->ip_address = $request->input('ip_address');
-        
-        $ModelToken->save();
-        
-        return redirect()->route('AdminApiTokensEdit', ["id"=>$id])->with('status', 'Токен обновлен!');
-    }
+			return view('apitokens::edit')->with(['token' => $Token]);
+		}
+		else if($method == 'PUT')
+		{// Update token
+			$this->validate($request, 
+				[
+					'name_token' => 							'required|min:2',
+					'token' => 									'required|min:44',
+					'ip_address' => 							'required|ip',
+					'scope' => 									'array|in:create_address,history_transaction,sending_funds',
+		            'notiffication_success_url' => 				'required|url|max:191',
+		            'notiffication_success_method' => 			'in:GET,POST',
+		            'notiffication_fail_url' => 				'required|url|max:191',
+		            'notiffication_fail_method' => 				'in:GET,POST',
+		            'notiffication_status_url' => 				'required|url|max:191',
+		        	'notiffication_status_method' => 			'in:GET,POST'
+				]
+			);
+			$Token = Api_Token::findOrFail($id);
+
+			$scope = json_encode($request->input('scope'));
+
+			$Token->name_token = $request->input('name_token');
+			$Token->token = $request->input('token');
+			$Token->ip_address = $request->input('ip_address');
+			$Token->scope = $scope;
+
+			$Token->notiffication_success = json_encode(
+				[
+					"url" => $request->input('notiffication_success_url'), 
+					"method" => $request->input('notiffication_status_method')
+				]
+			);
+			$Token->notiffication_fail = json_encode(
+				[
+					"url" => $request->input('notiffication_fail_url'), 
+					"method" => $request->input('notiffication_fail_method')
+				]
+			);
+			$Token->notiffication_status = json_encode(
+				[
+					"url" => $request->input('notiffication_status_url'), 
+					"method" => $request->input('notiffication_status_method')
+				]
+			);
+
+			$Token->save();
+
+			return redirect()->route('AdminApiTokens')->with('status', 'Токен успешно обновлен!');
+		}
+		else if($method == 'DELETE')
+		{// Delete token
+			$this->validate($request, [
+				'id' => 'required'
+			]);
+
+			Api_Token::where('id', $request->input('id'))->delete();
+		}
+
+		return redirect()->route('AdminApiTokens');
+	}
 }

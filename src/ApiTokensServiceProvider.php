@@ -1,8 +1,9 @@
 <?php
 
-namespace Selfreliance\Apitokens;
+namespace Selfreliance\apitokens;
 
 use Illuminate\Support\ServiceProvider;
+
 class ApiTokensServiceProvider extends ServiceProvider
 {
     /**
@@ -15,17 +16,11 @@ class ApiTokensServiceProvider extends ServiceProvider
         //
         include __DIR__.'/routes.php';
         $this->app->make('Selfreliance\Apitokens\ApiTokensController');
-        $this->loadViewsFrom(__DIR__.'/views', 'apitoken');
-        
-
-        //Публикуем view
-        // $this->publishes([
-        //     __DIR__.'/views' => resource_path('views/vendor/iusers'),
-        // ]);
-
-
-        //Миграция
+        $this->loadViewsFrom(__DIR__.'/views', 'apitokens');
         $this->loadMigrationsFrom(__DIR__.'/migrations');
+        $this->publishes([
+            __DIR__ . '/migrations/' => database_path('migrations')
+        ], 'migrations');
     }
 
     /**
@@ -36,5 +31,5 @@ class ApiTokensServiceProvider extends ServiceProvider
     public function register()
     {
         //
-    }
+    }	
 }

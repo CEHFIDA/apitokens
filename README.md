@@ -1,24 +1,23 @@
-Laravel 5 Admin Amazing api tokens
-======================
-after install this packages, you need install base admin
-[adminamazing](https://github.com/selfrelianceme/adminamazing)
+# Laravel 5 Admin Amazing tokens
+tokens - a package which allows you to monitor user tokens
 
------------------
+## Require
+
+- [adminamazing](https://github.com/selfreliance/adminamazing)
+
+## How to install
+
 Install via composer
 ```
 composer require selfreliance/apitokens
 ```
 
-Add Service Provider to `config/app.php` in `providers` section
+Migrations
 ```php
-Selfreliance\Iusers\ApiTokensServiceProvider::class,
+php artisan vendor:publish --provider="Selfreliance\apitokens\ApiTokensServiceProvider" --tag="migrations" --force
 ```
 
-
-Go to `http://myapp/admin/apitokens` to view admin amazing
-
-**Move public fields** for view customization:
-
+And do not forget about
+```php
+php artisan migrate
 ```
-php artisan vendor:publish
-``` 

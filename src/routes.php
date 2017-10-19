@@ -1,8 +1,8 @@
 <?php
 
-Route::group(['middleware' => 'web'], function () {
-	Route::get(config('adminamazing.path').'/apitokens', 'selfreliance\apitokens\ApiTokensController@index')->name('AdminApiTokens');
-	Route::get(config('adminamazing.path').'/apitokens/{id}', 'selfreliance\apitokens\ApiTokensController@edit')->name('AdminApiTokensEdit');
-	Route::put(config('adminamazing.path').'/apitokens/{id}', 'selfreliance\apitokens\ApiTokensController@update')->name('AdminApiTokenUpdate');
-	Route::delete(config('adminamazing.path').'/apitokens/{id}', 'selfreliance\apitokens\ApiTokensController@destroy')->name('AdminApiTokensDeleted');
+Route::group(['prefix' => config('adminamazing.path').'/apitokens', 'middleware' => ['web','CheckAccess']], function() {
+	Route::get('/', 'selfreliance\apitokens\ApiTokensController@index')->name('AdminApiTokens');
+	Route::get('/{id}', 'selfreliance\apitokens\ApiTokensController@action')->name('AdminApiTokensAbout');
+	Route::put('/{id}', 'selfreliance\apitokens\ApiTokensController@action')->name('AdminApiTokensUpdate');
+	Route::delete('/delete', 'selfreliance\apitokens\ApiTokensController@action')->name('AdminApiTokensDelete');
 });
