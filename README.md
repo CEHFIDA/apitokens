@@ -3,7 +3,7 @@ tokens - a package which allows you to monitor user tokens
 
 ## Require
 
-- [adminamazing](https://github.com/selfreliance/adminamazing)
+- [adminamazing](https://github.com/selfrelianceme/adminamazing)
 
 ## How to install
 
