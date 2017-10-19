@@ -48,16 +48,16 @@ class ApiTokensController extends Controller
 		{// Update token
 			$this->validate($request, 
 				[
-					'name_token' => 							'required|min:2',
-					'token' => 									'required|min:44',
-					'ip_address' => 							'required|ip',
-					'scope' => 									'array|in:create_address,history_transaction,sending_funds',
-		            'notiffication_success_url' => 				'required|url|max:191',
-		            'notiffication_success_method' => 			'in:GET,POST',
-		            'notiffication_fail_url' => 				'required|url|max:191',
-		            'notiffication_fail_method' => 				'in:GET,POST',
-		            'notiffication_status_url' => 				'required|url|max:191',
-		        	'notiffication_status_method' => 			'in:GET,POST'
+					'name_token' => 'required|min:2',
+					'token' => 'required|min:44',
+					'ip_address' => 'required|ip',
+					'scope' => 'array|in:create_address,history_transaction,sending_funds',
+		            'notiffication_success_url' => 'required|url|max:191',
+		            'notiffication_success_method' => 'in:GET,POST',
+		            'notiffication_fail_url' => 'required|url|max:191',
+		            'notiffication_fail_method' => 'in:GET,POST',
+		            'notiffication_status_url' => 'required|url|max:191',
+		        	'notiffication_status_method' => 'in:GET,POST'
 				]
 			);
 			$Token = Api_Token::findOrFail($id);
