@@ -2,29 +2,17 @@
 
 @section('pageTitle', 'API токены')
 @section('content')
-    <div class="modal fade" id="deleteModal" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="{{ route('AdminApiTokensDelete') }}" method="POST" class="form-horizontal">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">Вы точно хотите удалить данный токен?</div>
-                    <div class="modal-footer">
-                        {{ method_field('DELETE') }}
-                        <input type="hidden" name="id" value="">
-                        <button type="submit" class="btn btn-danger">Удалить</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <script>
+    var route = '{{ route('AdminApiTokensDelete') }}';
+    var message = 'Вы точно хотите удалить данный токен?';
+    </script>
     <div class="row">
         <!-- Column -->
         <div class="col-12">
             <div class="card">
                 <div class="card-block">
                     <h4 class="card-title">@yield('pageTitle')</h4>
+                    @if(count($tokens) > 0)
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
@@ -43,7 +31,8 @@
                                         <td>{{$token->id}}</td>
                                         <td>{{$token->name_token}}</td>
                                         <td>
-                                            @if($token->scope)
+                                            <span class="label label-info">account_information</span>
+                                            @if(count($token->scope) > 0)
                                                 @foreach($token->scope as $rule)
                                                     <span class="label label-info">{{$rule}}</span>
                                                 @endforeach
@@ -52,7 +41,7 @@
                                         <td>{{$token->created_at}}</td>
                                         <td>{{$token->ip_address}}</td>
                                         <td class="text-nowrap">
-                                            <a href="{{ route('AdminApiTokensAbout', $token->id) }}" data-toggle="tooltip" data-original-title="Редактировать"><i class="fa fa fa-pencil text-inverse m-r-10"></i></a>
+                                            <a href="{{ route('AdminApiTokensEdit', $token->id) }}" data-toggle="tooltip" data-original-title="Редактировать"><i class="fa fa fa-pencil text-inverse m-r-10"></i></a>
                                             <a href="#deleteModal" class="delete_toggle" data-rel="{{ $token->id }}" data-toggle="modal"><i class="fa fa-close text-danger"></i></a>
                                         </td>
                                     </tr>
@@ -60,7 +49,11 @@
                             </tbody>
                         </table>
                     </div>
-                    
+                    @else
+                    <div class="alert alert-warning text-center">
+                        <h4>Токенов не найдено!</h4>
+                    </div>
+                    @endif
                 </div>
             </div>
             <nav aria-label="Page navigation example" class="m-t-40">

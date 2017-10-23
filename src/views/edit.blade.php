@@ -46,7 +46,6 @@
                                             </label>
                                         </div>
                                     </div>
-                                    @if(count($token->scope) > 0)
                                     <div class="col-md-6">
                                         <div class="checkbox checkbox-inline checkbox-success">
                                             <input id="checkbox2" type="checkbox" 
@@ -85,9 +84,12 @@
                                             </label>
                                         </div>
                                     </div>
-                                    @endif
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-12">Создатель: {{$creator->name}} (<a href="{{ route('AdminUsersEdit', $creator->id) }}">{{$creator->email}}</a>)</label>
                         </div>
 
                         {{ csrf_field() }}
