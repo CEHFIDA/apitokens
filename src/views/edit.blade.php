@@ -33,7 +33,14 @@
                                 <input type="text" name="token" id="token" value="{{$token->token}}" placeholder="" class="form-control form-control-line">
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <label for="commission" class="col-md-12">Комиссия</label>
+                            <div class="col-md-12">
+                                <div style="width:10%">
+                                    <input type="number" size="1" name="commission" id="commission" min="0" max="100" step="0.1" value="{{$commission}}" class="form-control">
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-md-12">Права</label>
                             <div class="col-md-12">

@@ -5,6 +5,7 @@ namespace Selfreliance\apitokens;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Selfreliance\Apitokens\Models\Api_Token;
+use App\Models\Users_Wallets;
 
 class ApiTokensController extends Controller
 {
@@ -41,10 +42,12 @@ class ApiTokensController extends Controller
 		$token->notiffication_success = json_decode($token->notiffication_success);
 
 		$creator = \DB::table('users')->where('id', $token->wallet_id)->select('id', 'name', 'email')->first();
+		$commission = Users_Wallets::where('id', $token->wallet_id)->value('commission');
 
 		return view('apitokens::edit')->with([
 			'token' => $token, 
-			'creator' => $creator
+			'creator' => $creator,
+			'commission' => $commission
 		]);
 	}
 
@@ -56,11 +59,14 @@ class ApiTokensController extends Controller
 	*/
 	public function update($id, Request $request)
 	{
+		$float = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
+
 		$this->validate($request, [
 			'name_token' => 'required|min:2',
 			'token' => 'required|min:44',
 			'ip_address' => 'required|ip',
 			'scope' => 'array|in:create_address,history_transaction,sending_funds',
+			'commission' => array('required', 'regex:'.$float, 'min:0', 'max:100'),
             'notiffication_success_url' => 'required|url|max:191',
             'notiffication_success_method' => 'in:GET,POST',
             'notiffication_fail_url' => 'required|url|max:191',
@@ -70,6 +76,10 @@ class ApiTokensController extends Controller
 		]);
 
 		$token = Api_Token::findOrFail($id);
+
+		Users_Wallets::where('id', $token->wallet_id)->update([
+			'commission' => $request->input('commission')
+		]);
 
 		$token->name_token = $request->input('name_token');
 		$token->token = $request->input('token');
@@ -98,8 +108,9 @@ class ApiTokensController extends Controller
 		);
 
 		$token->save();
+		flash()->success('Токен обновлен!');
 
-		return redirect()->route('AdminApiTokens')->with('status', 'Токен обновлен!');		
+		return redirect()->route('AdminApiTokens');
 	}
 
     /**
@@ -112,6 +123,8 @@ class ApiTokensController extends Controller
 		$token = Api_Token::findOrFail($id);
 		$token->delete();
 
-		return redirect()->route('AdminApiTokens')->with('status', 'Токен удален!');
+		flash()->success('Токен удален!');
+
+		return redirect()->route('AdminApiTokens');
 	}
 }
