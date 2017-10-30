@@ -21,6 +21,9 @@ class ApiTokensServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/migrations/' => database_path('migrations')
         ], 'migrations');
+        $this->publishes([
+            __DIR__ . '/Models/Users_Wallets.php' => app_path('Models/Users_Wallets.php')
+        ], 'model');
     }
 
     /**
