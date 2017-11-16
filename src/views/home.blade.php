@@ -2,12 +2,13 @@
 
 @section('pageTitle', 'API токены')
 @section('content')
-    <script>
-    var route = '{{ route('AdminApiTokensDelete') }}';
-    var message = 'Вы точно хотите удалить данный токен?';
-    </script>
+    @push('scripts')
+        <script>
+            var route = '{{ route('AdminApiTokensDelete') }}';
+            var message = 'Вы точно хотите удалить данный токен?';
+        </script>
+    @endpush
     <div class="row">
-        <!-- Column -->
         <div class="col-12">
             <div class="card">
                 <div class="card-block">
@@ -42,7 +43,7 @@
                                         <td>{{$token->ip_address}}</td>
                                         <td class="text-nowrap">
                                             <a href="{{ route('AdminApiTokensEdit', $token->id) }}" data-toggle="tooltip" data-original-title="Редактировать"><i class="fa fa fa-pencil text-inverse m-r-10"></i></a>
-                                            <a href="#deleteModal" class="delete_toggle" data-rel="{{ $token->id }}" data-toggle="modal"><i class="fa fa-close text-danger"></i></a>
+                                            <a href="#deleteModal" class="delete_toggle" data-id="{{ $token->id }}" data-toggle="modal"><i class="fa fa-close text-danger"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach                                
@@ -59,7 +60,6 @@
             <nav aria-label="Page navigation example" class="m-t-40">
                 {{ $tokens->links('vendor.pagination.bootstrap-4') }}
             </nav>            
-        </div>
-        <!-- Column -->    
+        </div>    
     </div>
 @endsection

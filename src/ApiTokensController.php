@@ -108,7 +108,7 @@ class ApiTokensController extends Controller
 		);
 
 		$token->save();
-		flash()->success('Токен обновлен!');
+		flash()->success( trans('translate-tokens::tokens.updatedToken') );
 
 		return redirect()->route('AdminApiTokens');
 	}
@@ -123,7 +123,7 @@ class ApiTokensController extends Controller
 		$token = Api_Token::findOrFail($id);
 		$token->delete();
 
-		flash()->success('Токен удален!');
+		flash()->success( trans('translate-tokens::tokens.deletedToken') );
 
 		return redirect()->route('AdminApiTokens');
 	}
