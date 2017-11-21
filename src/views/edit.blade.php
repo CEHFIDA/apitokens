@@ -96,7 +96,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-12">Создатель: {{$creator->name}} (<a href="{{ route('AdminUsersEdit', $creator->id) }}">{{$creator->email}}</a>)</label>
+                            <label class="col-md-12">Создатель: {{$creator['name']}} (<a href="{{ route('AdminUsersEdit', $creator['id']) }}">{{$creator['email']}}</a>)</label>
                         </div>
 
                         {{ csrf_field() }}

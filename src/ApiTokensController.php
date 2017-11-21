@@ -9,10 +9,14 @@ use App\Models\Users_Wallets;
 
 class ApiTokensController extends Controller
 {
-	/**
-	 * Index
-	 * @return view home with tokens
-	*/
+	public function __construct()
+	{
+		\Blocks::register('countTokens', function(){
+			$count = Api_Token::count('id');
+			return view('apitokens::block', compact('count'))->render();
+		});
+	}
+
 	public function index()
 	{
 		$tokens = Api_Token::orderBy('id', 'desc')->paginate(10);
@@ -26,11 +30,6 @@ class ApiTokensController extends Controller
 		return view('apitokens::home')->with(['tokens' => $tokens]);
 	}
 
-	/**
-	 * Edit token
-	 * @param int $id
-	 * @return view edit with $token
-	*/
 	public function edit($id)
 	{
 		$token = Api_Token::findOrFail($id);
@@ -44,19 +43,9 @@ class ApiTokensController extends Controller
 		$creator = \DB::table('users')->where('id', $token->wallet_id)->select('id', 'name', 'email')->first();
 		$commission = Users_Wallets::where('id', $token->wallet_id)->value('commission');
 
-		return view('apitokens::edit')->with([
-			'token' => $token, 
-			'creator' => $creator,
-			'commission' => $commission
-		]);
+		return view('apitokens::edit', compact('token', 'creator', 'commission'));
 	}
 
-	/**
-	 * Update token
-	 * @param int $id
-	 * @param request $request
-	 * @return mixed
-	*/
 	public function update($id, Request $request)
 	{
 		$float = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
@@ -108,22 +97,17 @@ class ApiTokensController extends Controller
 		);
 
 		$token->save();
-		flash()->success( trans('translate-tokens::tokens.updatedToken') );
+		flash()->success('Токен успешно обновлен');
 
 		return redirect()->route('AdminApiTokens');
 	}
 
-    /**
-     * Destroy token
-     * @param int $id
-     * @return mixed
-    */	
 	public function destroy($id)
 	{
 		$token = Api_Token::findOrFail($id);
 		$token->delete();
 
-		flash()->success( trans('translate-tokens::tokens.deletedToken') );
+		flash()->success('Токен удален');
 
 		return redirect()->route('AdminApiTokens');
 	}

@@ -18,7 +18,6 @@ class ApiTokensServiceProvider extends ServiceProvider
         $this->app->make('Selfreliance\Apitokens\ApiTokensController');
         $this->loadViewsFrom(__DIR__.'/views', 'apitokens');
         $this->loadMigrationsFrom(__DIR__.'/migrations');
-        $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'translate-tokens');
         $this->publishes([
             __DIR__ . '/migrations/' => database_path('migrations')
         ], 'migrations');
