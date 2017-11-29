@@ -9,13 +9,11 @@ use App\Models\Users_Wallets;
 
 class ApiTokensController extends Controller
 {
-	public function __construct()
-	{
-		\Blocks::register('countTokens', function(){
-			$count = Api_Token::count('id');
-			return view('apitokens::block', compact('count'))->render();
-		});
-	}
+    public function registerBlock()
+    {
+        $count = Api_Token::count('id');
+        return view('apitokens::block', compact('count'))->render();
+    }
 
 	public function index()
 	{

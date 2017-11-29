@@ -12,7 +12,7 @@ Install via composer
 composer require selfreliance/apitokens
 ```
 
-Model, migrations
+Model
 ```php
 php artisan vendor:publish --provider="Selfreliance\apitokens\ApiTokensServiceProvider" --force
 ```
@@ -26,6 +26,15 @@ class User extends Authenticatable
        return $this->hasMany('App\Models\Users_Wallets', 'user_id')->orderBy('id', $order);
     }	
 }
+```
+
+### Also you can connect the information block
+Edit value blocks in config (config/adminamazing.php)
+```
+'blocks' => [
+    //
+    'countTokens' => 'Selfreliance\Apitokens\ApiTokensController@registerBlock',
+]
 ```
 
 And do not forget about
