@@ -1,7 +1,7 @@
 {
 	"name": "selfreliance/apitokens",
 	"type": "library",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"description": "List of tokens for adminamazing",
 	"keywords": ["admin", "tokens", "laravel"],
 	"homepage": "https://github.com/selfreliance/apitokens",

@@ -12,7 +12,7 @@ Install via composer
 composer require selfreliance/apitokens
 ```
 
-Model
+Config, model
 ```php
 php artisan vendor:publish --provider="Selfreliance\apitokens\ApiTokensServiceProvider" --force
 ```

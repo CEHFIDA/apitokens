@@ -21,6 +21,9 @@ class ApiTokensServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/Models/Users_Wallets.php' => app_path('Models/Users_Wallets.php')
         ], 'model');
+        $this->publishes([
+            __DIR__ . '/config/apitokens.php' => config_path('apitokens.php')
+        ], 'config');
     }
 
     /**
